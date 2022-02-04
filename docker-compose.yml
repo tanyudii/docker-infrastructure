@@ -59,7 +59,7 @@ networks:
     infra:
         driver: bridge
 volumes:
-    infra-pqsql:
+    infra-pgsql:
         driver: local
     infra-mysql:
         driver: local
