@@ -3,37 +3,37 @@ services:
     pgsql:
       image: 'postgres:13'
       ports:
-          - '${FORWARD_DB_PORT:-5432}:5432'
+          - '${FORWARD_PGSQL_PORT:-5432}:5432'
       environment:
-          PGPASSWORD: '${DB_PASSWORD:-secret}'
-          POSTGRES_DB: '${DB_DATABASE}'
-          POSTGRES_USER: '${DB_USERNAME}'
-          POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+          PGPASSWORD: '${PGSQL_DB_PASSWORD:-secret}'
+          POSTGRES_DB: '${PGSQL_DB_DATABASE}'
+          POSTGRES_USER: '${PGSQL_DB_USERNAME}'
+          POSTGRES_PASSWORD: '${PGSQL_DB_PASSWORD:-secret}'
       volumes:
           - 'infra-pgsql:/var/lib/postgresql/data'
       networks:
           - infra
       healthcheck:
-          test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+          test: ["CMD", "pg_isready", "-q", "-d", "${PGSQL_DB_DATABASE}", "-U", "${PGSQL_DB_USERNAME}"]
           retries: 3
           timeout: 5s
     mysql:
         image: 'mysql/mysql-server:5.7'
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
+            - '${FORWARD_MYSQL_DB_PORT:-3306}:3306'
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${MYSQL_DB_PASSWORD}'
             MYSQL_ROOT_HOST: "%"
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: '${MYSQL_DB_DATABASE}'
+            MYSQL_USER: '${MYSQL_DB_USERNAME}'
+            MYSQL_PASSWORD: '${MYSQL_DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
             - 'infra-mysql:/var/lib/mysql'
         networks:
             - infra
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            test: ["CMD", "mysqladmin", "ping", "-p${MYSQL_DB_PASSWORD}"]
             retries: 3
             timeout: 5s
     mongodb:
