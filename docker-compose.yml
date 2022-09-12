@@ -78,6 +78,18 @@ services:
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
             - infra
+    meilisearch:
+        image: 'getmeili/meilisearch:latest'
+        ports:
+            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+        volumes:
+            - 'infra-meilisearch:/meili_data'
+        networks:
+            - infra
+        healthcheck:
+            test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
+            retries: 3
+            timeout: 5s
 networks:
     infra:
         driver: bridge
@@ -89,4 +101,6 @@ volumes:
     infra-mongodb:
         driver: local
     infra-redis:
+        driver: local
+    infra-meilisearch:
         driver: local
